@@ -63,3 +63,36 @@ npx vitest run src/foo.test.tsx  # 단일 파일
 ```
 
 테스트 setup: `src/test-setup.ts` → `@testing-library/jest-dom` import.
+
+## 알려진 불일치 패턴
+
+### 1. 함수 네이밍 컨벤션
+
+API 레이어(`api/notes.ts`)와 Context(`NotesContext.tsx`) 모두 `create/update/delete` 동사로 통일.
+
+| 작업 | `api/notes.ts` | `NotesContext.tsx` |
+|:----:|:--------------:|:------------------:|
+| 생성 | `createNote` | `createNote` |
+| 수정 | `updateNote` | `updateNote` |
+| 삭제 | `deleteNote` | `deleteNote` |
+
+### 2. 에러 처리
+
+모든 에러는 `console.error()`로 처리. `alert()` 사용 금지.
+
+- 초기 로딩 오류 (`NotesContext.tsx:25`): `setError()` → 상태 저장 → UI 렌더링
+- 저장/수정 오류 (`NoteEditor.tsx`): `console.error(e)`
+
+### 3. 삭제 후 선택 상태 미정리
+
+`NoteList`에서 `deleteNote` 호출 후 `App.tsx`의 `selectedNoteId`가 초기화되지 않는다. 삭제된 노트 ID가 남아 있으면 `NoteEditor`가 존재하지 않는 노트를 참조하게 된다 (`App.tsx:21`, `NoteList.tsx:10`).
+
+### 4. useEffect 의존성 배열 누락
+
+`NoteEditor.tsx:27`에서 `selectedNote`가 의존성 배열에서 빠져 있어 lint 경고를 수동으로 억제 중.
+
+```tsx
+}, [selectedNoteId, isCreating]); // eslint-disable-line react-hooks/exhaustive-deps
+```
+
+`selectedNote`를 의존성에 추가하거나 `selectedNoteId`만으로 폼 동기화 로직을 재작성할 것.
