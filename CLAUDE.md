@@ -48,6 +48,19 @@ src/
 
 **컴포넌트**: 선택 상태(`selectedNoteId`, `isCreating`)는 `App.tsx`가 소유, `NoteEditor`에 props로 전달.
 
+## 커밋 규칙
+
+Conventional Commits 형식 강제 (`commitlint` + `.husky/commit-msg`).
+
+```
+<type>: 제목 (필수)
+
+본문 첫째 줄  ← 필수
+본문 둘째 줄  ← 필수 (최소 2줄)
+```
+
+허용 type: `feat`, `fix`, `chore`, `refactor`, `docs`, `test`, `style`, `ci`
+
 ## 코드 스타일
 
 Prettier 설정 (`.prettierrc`):

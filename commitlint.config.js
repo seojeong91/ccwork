@@ -12,6 +12,7 @@ export default {
   ],
   rules: {
     'subject-empty': [2, 'never'],
+    'subject-case': [0],
     'body-min-lines': [2, 'always'],
   },
 };
